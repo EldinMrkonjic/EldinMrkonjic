@@ -155,12 +155,44 @@ form.addEventListener('submit', async (e) => {
   }
 
   if (method === 'formspree') {
+    e.preventDefault();
     const subj = document.getElementById('fs-subject');
     if (subj) subj.value = `Kontakt via Portfolio: ${name}`;
     const reply = document.getElementById('fs-replyto');
     if (reply) reply.value = email;
-    statusEl.textContent = 'Sende über Formspree…';
-    return; // native submit
+    statusEl.textContent = 'Nachricht wird gesendet...';
+
+    const submitBtn = form.querySelector('button[type="submit"]');
+    if (submitBtn) submitBtn.disabled = true;
+
+    try {
+      const formData = new FormData(form);
+      const res = await fetch(form.action, {
+        method: 'POST',
+        body: formData,
+        headers: { Accept: 'application/json' }
+      });
+      if (res.ok) {
+        statusEl.textContent = 'Danke! Nachricht erfolgreich gesendet.';
+        form.reset();
+      } else {
+        let errorText = 'Senden fehlgeschlagen. Bitte versuche es erneut oder nutze die E-Mail.';
+        try {
+          const data = await res.json();
+          if (data && Array.isArray(data.errors) && data.errors.length) {
+            errorText = data.errors.map(err => err.message).join(' ');
+          }
+        } catch (err) {
+          // ignore JSON parse errors
+        }
+        statusEl.textContent = errorText;
+      }
+    } catch (err) {
+      statusEl.textContent = 'Senden fehlgeschlagen. Bitte versuche es erneut oder nutze die E-Mail.';
+    } finally {
+      if (submitBtn) submitBtn.disabled = false;
+    }
+    return;
   }
 
   if (method === 'emailjs') {
@@ -212,4 +244,3 @@ form.addEventListener('submit', async (e) => {
     statusEl.textContent = 'Konnte E-Mail Programm nicht öffnen. Schreibe mir direkt an: ' + emailTo;
   }
 });
-
