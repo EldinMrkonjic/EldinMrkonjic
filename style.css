@@ -141,9 +141,34 @@ body[data-theme="light"] {
 .hero-media { display: grid; place-items: center; }
 .avatar { position: relative; width: 260px; height: 260px; display: grid; place-items: center; }
 .avatar-ring { position: absolute; inset: 0; border-radius: 50%; background: conic-gradient(from 0deg, var(--accent), var(--accent-2), var(--accent)); filter: blur(12px) saturate(140%); opacity: 0.8; animation: spin 8s linear infinite; }
-.avatar-inner { position: relative; width: 220px; height: 220px; border-radius: 50%; display: grid; place-items: center; background: rgba(255,255,255,0.06); border: 1px solid var(--border); font-size: 42px; font-weight: 800; letter-spacing: 2px; backdrop-filter: var(--blur); overflow: hidden; }
 
-.avatar-inner img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; display: block; border-radius: 50%; transform: scale(0.8); transform-origin: center; }
+/* --- UPDATED: Avatar Inner (for initials) --- */
+.avatar-inner {
+  position: relative;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--border);
+  backdrop-filter: var(--blur);
+  overflow: hidden;
+  /* Font styling for initials */
+  font-size: 5rem;
+  font-weight: 800;
+  letter-spacing: -2px;
+}
+
+/* New class for the glowing text effect on "EM" */
+.avatar-initials {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 15px rgba(14, 165, 233, 0.5));
+}
+/* ------------------------------------------- */
 
 @keyframes spin { from { transform: rotate(0); } to { transform: rotate(360deg); } }
 
